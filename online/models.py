@@ -49,3 +49,12 @@ class Listing(models.Model):
 class ListingImage(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="listing_images/")
+
+class Availability(models.Model):
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+
+    date = models.DateField()
+    available_slots = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.listing.title} - {self.date}"
