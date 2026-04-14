@@ -6,10 +6,10 @@ class VendorSerializer(serializers.ModelSerializer):
         model = Vendor
         fields = "__all__"
 
-# class DestinationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Destination
-#         fields = "__all__"
+class DestinationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Destination
+        fields = "__all__"
 
 # class ListingImageSerializer(serializers.ModelSerializer):
 #     class Meta:
