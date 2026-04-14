@@ -11,15 +11,15 @@ class DestinationSerializer(serializers.ModelSerializer):
         model = Destination
         fields = "__all__"
 
-# class ListingImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ListingImage
-#         fields = "__all__"
+class ListingImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ListingImage
+        fields = "__all__"
 
-# class PaymentSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Payment
-#         fields = "__all__"
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "__all__"
 
 # class ReviewSerializer(serializers.ModelSerializer):
 #     class Meta:
