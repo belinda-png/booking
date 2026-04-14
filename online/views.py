@@ -22,3 +22,49 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsAdmin]
     def get_queryset(self):
         return User.objects.filter(id=self.request.user.id)
+class VendorViewSet(viewsets.ModelViewSet):
+    queryset = Vendor.objects.all()
+    serializer_class = VendorSerializer
+
+    def get_permissions(self):
+        if self.action in ["create"]:
+            return [permissions.IsAuthenticated()]
+        elif self.action in ["approve_vendor"]:
+            return [IsAdmin()]
+        return [permissions.IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=["post"])
+    def approve_vendor(self, request, pk=None):
+        vendor = self.get_object()
+        vendor.is_approved = True
+        vendor.save()
+        return Response({"status": "Vendor approved"})
+class DestinationViewSet(viewsets.ModelViewSet):
+    queryset = Destination.objects.all()
+    serializer_class = DestinationSerializer
+    permission_classes = [permissions.IsAuthenticated, IsAdmin]
+
+class ListingViewSet(viewsets.ModelViewSet):
+    queryset = Listing.objects.all()
+    serializer_class = ListingSerializer
+    permission_classes = [permissions.AllowAny]
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [IsVendor()]
+        return [permissions.AllowAny()]
+    def perform_create(self, serializer):
+        vendor = Vendor.objects.get(user=self.request.user)
+        serializer.save(vendor=vendor)
+    def get_queryset(self):
+        queryset = Listing.objects.filter(is_active=True)
+        destination_id = self.request.query_params.get("destination")
+        if destination:
+            queryset = queryset.filter(destination_name_icontains=destination)
+        return queryset
+class AvailabilityViewSet(viewsets.ModelViewSet):
+    queryset = Availability.objects.all()
+    serializer_class = AvailabilitySerializer
+    permission_classes = [IsVendor]
