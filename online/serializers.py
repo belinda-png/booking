@@ -19,79 +19,79 @@ class ListingImageSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-#         fields = "__all__"
+        fields = "__all__"
 
-# # class ReviewSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Review
-# #         fields = "__all__"
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = "__all__"
 
-# # class ListingSerializer(serializers.ModelSerializer):
-# #     images = ListingImageSerializer(many=True, read_only=True)
-# #     destination = DestinationSerializer(read_only=True)
+class ListingSerializer(serializers.ModelSerializer):
+    images = ListingImageSerializer(many=True, read_only=True)
+    destination = DestinationSerializer(read_only=True)
 
-# #     class Meta:
-# #         model = Listing
-# #         fields = "__all__"
+    class Meta:
+        model = Listing
+        fields = "__all__"
 
-# # class AvailabilitySerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Availability
-# #         fields = "__all__"
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = "__all__"
 
-# # class BookingSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Booking
-# #         fields = "__all__"
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = "__all__"
 
-# # class BookingDetailSerializer(serializers.ModelSerializer):
-# #     listing = ListingSerializer(read_only=True)
-# #     payment = PaymentSerializer(read_only=True)
+class BookingDetailSerializer(serializers.ModelSerializer):
+    listing = ListingSerializer(read_only=True)
+    payment = PaymentSerializer(read_only=True)
 
-# #     class Meta:
-# #         model = Booking
-# #         fields = "__all__"
+    class Meta:
+        model = Booking
+        fields = "__all__"
 
-# # class BookingCreateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Booking
-# #         fields = "__all__"
+class BookingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = "__all__"
 
-# # class BookingUpdateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Booking
-# #         fields = ["status"]
-# # class ReviewSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Review
-# #         fields = "__all__"
+class BookingUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ["status"]
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = "__all__"
 
-# # class ReviewCreateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Review
-# #         fields = "__all__"
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = "__all__"
 
-# # class ReviewUpdateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Review
-# #         fields = ["rating", "comment"]
-# # class PaymentCreateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Payment
-# #         fields = "__all__"
-# # class PaymentUpdateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Payment
-# #         fields = ["status"]
+class ReviewUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ["rating", "comment"]
+class PaymentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "__all__"
+class PaymentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ["status"]
 
-# # class VendorCreateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Vendor
-# #         fields = "__all__"
-# # class VendorUpdateSerializer(serializers.ModelSerializer):
-# #     class Meta:
-# #         model = Vendor
-# #         fields = ["name", "email", "phone_number", "address"]
+class VendorCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor
+        fields = "__all__"
+class VendorUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor
+        fields = ["name", "email", "phone_number", "address"]
 
 class DestinationCreateSerializer(serializers.ModelSerializer):
     class Meta:
