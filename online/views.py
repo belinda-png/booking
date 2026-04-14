@@ -126,3 +126,17 @@ class PaymentViewSet(viewsets.ModelViewSet):
             amount=booking.total_price,
             status="successful"  # later connect real payment gateway
         )
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        booking_id = self.request.data.get("booking")
+        booking = Booking.objects.get(id=booking_id)
+
+        serializer.save(
+            booking=booking,
+            amount=booking.total_price,
+            status="successful"  # later connect real payment gateway
+        )
