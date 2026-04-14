@@ -15,3 +15,10 @@ class IsVendor(permissions.BasePermission):
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == "admin"
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)

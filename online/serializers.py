@@ -119,3 +119,7 @@ class AvailabilityUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Availability
         fields = ["listing", "date", "is_available"]
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
