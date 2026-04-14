@@ -68,3 +68,61 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
     queryset = Availability.objects.all()
     serializer_class = AvailabilitySerializer
     permission_classes = [IsVendor]
+class BookingViewSet(viewsets.ModelViewSet):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [permissions.IsAuthenticated()]
+        elif self.action in ["confirm_booking", "decline_booking"]:
+            return [IsVendor()]
+        return [permissions.IsAuthenticated()]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.role == "vendor":
+            return Booking.objects.filter(listing__vendor__user=user)
+        return Booking.objects.filter(user=user)
+
+    def perform_create(self, serializer):
+        listing_id = self.request.data.get("listing")
+        listing = Listing.objects.get(id=listing_id)
+
+        number_of_people = int(self.request.data.get("number_of_people"))
+        total_price = listing.price_per_person * number_of_people
+
+        serializer.save(
+            user=self.request.user,
+            listing=listing,
+            total_price=total_price
+        )
+
+    @action(detail=True, methods=["post"])
+    def confirm_booking(self, request, pk=None):
+        booking = self.get_object()
+        booking.status = "confirmed"
+        booking.save()
+        return Response({"status": "Booking confirmed"})
+
+    @action(detail=True, methods=["post"])
+    def decline_booking(self, request, pk=None):
+        booking = self.get_object()
+        booking.status = "declined"
+        booking.save()
+        return Response({"status": "Booking declined"})
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        booking_id = self.request.data.get("booking")
+        booking = Booking.objects.get(id=booking_id)
+
+        serializer.save(
+            booking=booking,
+            amount=booking.total_price,
+            status="successful"  # later connect real payment gateway
+        )
