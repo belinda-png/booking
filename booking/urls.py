@@ -13,11 +13,35 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
+"""from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
+from django.http import JsonResponse
+
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+
+def api_root(request):
+    return JsonResponse({
+        "message": "Welcome to Tourism Booking API 🚀",
+        "docs": "/api/docs/",
+        "schema": "/api/schema/",
+    })
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('online.urls')),
+    path("", api_root, name="api-root"),
+
+    path("admin/", admin.site.urls),
+
+    # YOUR API
+    path("api/v1/", include(("online.urls", "online"), namespace="v1")),
+
+    # DOCS
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
