@@ -140,11 +140,19 @@ class PaymentViewSet(viewsets.ModelViewSet):
             amount=booking.total_price,
             status="successful"  # later connect real payment gateway
         )
-
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Review.objects.all()
+        listing_id = self.request.query_params.get("listing")
+
+        if listing_id:
+            queryset = queryset.filter(listing_id=listing_id)
+
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
