@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'online',
-     "rest_framework",
+    'rest_framework',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -63,8 +64,8 @@ ROOT_URLCONF = 'booking.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [],  # you can leave this empty
+        'APP_DIRS': True,  # 👈 THIS MUST BE TRUE
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -74,7 +75,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'booking.wsgi.application'
 
 
