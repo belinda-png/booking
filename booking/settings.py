@@ -44,11 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'online',
+
     'rest_framework',
     'drf_spectacular',
-    'django-debug-toolbar-6.3.0',
-    ' psycopg2-binary-2.9.11',
+    'debug_toolbar',
+
+    'online',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 ]
 
 ROOT_URLCONF = 'booking.urls'
@@ -89,7 +92,7 @@ DATABASES = {
         'NAME': 'booking_db',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'db',   # 👈 IMPORTANT (docker service name)
+        'HOST': 'localhost',   # 👈 IMPORTANT (docker service name)
         'PORT': '5432',
     }
 }
