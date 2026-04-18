@@ -2,26 +2,28 @@ function App() {
   return (
     <div className="page-shell">
       <header className="topbar">
-        <div className="brand">
-          <div className="logo-mark">BU</div>
-          <div>
-            <span className="brand-label">Booking Uganda</span>
-            <strong>bookinguganda.com</strong>
+        <div className="topbar-row">
+          <div className="brand brand-logo">
+            <strong>Booking.com</strong>
+          </div>
+
+          <div className="utility-right">
+            <button className="utility-pill">USD</button>
+            <button className="utility-pill with-flag" aria-label="United States">🇺🇸</button>
+            <button className="utility-icon" aria-label="Help">?</button>
+            <a href="#" className="list-property">List your property</a>
+            <button className="ghost-button">Register</button>
+            <button className="solid-button">Sign in</button>
           </div>
         </div>
 
         <nav className="topnav">
-          <a href="#">Stays</a>
-          <a href="#">Flights</a>
-          <a href="#">Car rental</a>
-          <a href="#">Attractions</a>
-          <a href="#">Airport taxis</a>
+          <a href="#"><span className="nav-icon">🛏</span> Stays</a>
+          <a href="#"><span className="nav-icon">✈️</span> Flights</a>
+          <a href="#"><span className="nav-icon">🚗</span> Car rental</a>
+          <a href="#"><span className="nav-icon">🎡</span> Attractions</a>
+          <a href="#"><span className="nav-icon">🚕</span> Airport taxis</a>
         </nav>
-
-        <div className="top-actions">
-          <button className="ghost-button">Register</button>
-          <button className="solid-button">Sign in</button>
-        </div>
       </header>
 
       <main>
