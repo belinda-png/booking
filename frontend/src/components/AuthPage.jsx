@@ -3,21 +3,21 @@ import { useState } from 'react'
 function AuthPage({ mode, onNavigate }) {
   const isRegister = mode === 'register'
 
+  const [authMethod, setAuthMethod] = useState('email') // 'email' or 'google'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const [code, setCode] = useState('')
-  const [codeSent, setCodeSent] = useState(false)
-  const [message, setMessage] = useState('')
+  const title = isRegister ? 'Create your account' : 'Sign in to your account'
 
+  // ✅ Password validation
   const validatePassword = (value) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/
 
     if (!regex.test(value)) {
-      setError("Password must contain both letters and numbers")
+      setError('Password must contain letters and numbers')
     } else {
-      setError("")
+      setError('')
     }
   }
 
@@ -27,40 +27,45 @@ function AuthPage({ mode, onNavigate }) {
     validatePassword(value)
   }
 
-  const title = isRegister ? 'Create your account' : 'Sign in to your account'
-  const subtitle = isRegister
-    ? 'Register with Google, Facebook, or email and verify with a code.'
-    : 'Use Google, Facebook, or your email and verify with a code to sign in.'
-
-  const handleSocialSign = (provider) => {
-    alert(`${provider} sign-in is ready.`)
+  // ✅ Simulated Google login
+  const handleGoogleLogin = () => {
+    setAuthMethod('google')
+    setEmail('user@gmail.com') // simulate Google returning email
   }
 
-  const sendVerificationCode = (event) => {
-    event.preventDefault()
+  // ✅ Main submit logic
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
-    if (!email) {
-      alert('Please enter your email address.')
-      return
+    if (authMethod === 'email') {
+      if (!email || !password) {
+        alert('Please enter email and password')
+        return
+      }
+
+      if (error) {
+        alert('Fix password requirements')
+        return
+      }
+
+      alert('Logged in with email + password')
+      onNavigate('#home')
     }
 
-    if (error || !password) {
-      alert('Please enter a valid password.')
-      return
+    if (authMethod === 'google') {
+      if (!password) {
+        alert('Please set your password')
+        return
+      }
+
+      if (error) {
+        alert('Fix password requirements')
+        return
+      }
+
+      alert(`Google account ${email} connected successfully`)
+      onNavigate('#home')
     }
-
-    setCodeSent(true)
-    setMessage(`A verification code has been sent to ${email}.`)
-  }
-
-  const verifyCode = () => {
-    if (!code || code.length < 4) {
-      alert('Please enter a valid verification code.')
-      return
-    }
-
-    alert(isRegister ? 'Registration complete!' : 'Signed in successfully!')
-    onNavigate('#home')
   }
 
   return (
@@ -68,31 +73,28 @@ function AuthPage({ mode, onNavigate }) {
       <section className="auth-page">
         <div className="auth-panel">
 
-          <div className="auth-head">
-            <span className="eyebrow">{isRegister ? 'Register' : 'Sign in'}</span>
-            <h1>{title}</h1>
-            <p className="auth-subtitle">{subtitle}</p>
-          </div>
+          <h1>{title}</h1>
 
-          <div className="social-row">
-            <button type="button" onClick={() => handleSocialSign('Google')}>
-              🌐 Continue with Google
-            </button>
-            <button type="button" onClick={() => handleSocialSign('Facebook')}>
-              📘 Continue with Facebook
-            </button>
-          </div>
+          {/* ✅ Google button */}
+          <button type="button" onClick={handleGoogleLogin}>
+            🌐 Continue with Google
+          </button>
 
-          <div className="divider">Or use your email</div>
+          <div style={{ margin: '10px 0' }}>OR</div>
 
-          <form onSubmit={sendVerificationCode}>
+          {/* ✅ Form */}
+          <form onSubmit={handleSubmit}>
 
             <div className="form-field">
               <label>Email</label>
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setAuthMethod('email') // switch back if user types
+                  setEmail(e.target.value)
+                }}
+                placeholder="Enter email"
                 required
               />
             </div>
@@ -106,37 +108,35 @@ function AuthPage({ mode, onNavigate }) {
                 placeholder="Enter password"
                 required
               />
-              {error && <p style={{ color: "red" }}>{error}</p>}
+              {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
 
             <button type="submit">
-              {isRegister ? 'Send verification code' : 'Send sign-in code'}
+              {authMethod === 'google'
+                ? 'Continue with Google'
+                : isRegister
+                ? 'Register'
+                : 'Sign In'}
             </button>
 
           </form>
 
-          {codeSent && (
-            <div className="verify-panel">
-              <p>{message}</p>
-
-              <input
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Enter code"
-              />
-
-              <button onClick={verifyCode}>
-                {isRegister ? 'Finish registration' : 'Sign in'}
-              </button>
-            </div>
-          )}
-
-          <div>
+          {/* ✅ Navigation */}
+          <div style={{ marginTop: '10px' }}>
             {isRegister ? (
-              <>Already have an account? <button onClick={() => onNavigate('#signin')}>Sign in</button></>
+              <>
+                Already have an account?{' '}
+                <button onClick={() => onNavigate('#signin')}>
+                  Sign in
+                </button>
+              </>
             ) : (
-              <>New here? <button onClick={() => onNavigate('#register')}>Create account</button></>
+              <>
+                New here?{' '}
+                <button onClick={() => onNavigate('#register')}>
+                  Create account
+                </button>
+              </>
             )}
           </div>
 
