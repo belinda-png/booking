@@ -1,14 +1,26 @@
 import { useState } from 'react'
-import app from "../firebase";
+import { auth, googleProvider, db } from "../firebase"
+
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup
+} from "firebase/auth"
+
+import { doc, setDoc } from "firebase/firestore"
+
 function AuthPage({ mode, onNavigate }) {
   const isRegister = mode === 'register'
 
-  const [authMethod, setAuthMethod] = useState('email') // 'email' or 'google'
+  const [authMethod, setAuthMethod] = useState('email')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const title = isRegister ? 'Create your account' : 'Sign in to your account'
+  const title = isRegister
+    ? 'Create your account'
+    : 'Sign in to your account'
 
   // ✅ Password validation
   const validatePassword = (value) => {
@@ -27,44 +39,88 @@ function AuthPage({ mode, onNavigate }) {
     validatePassword(value)
   }
 
-  // ✅ Simulated Google login
-  const handleGoogleLogin = () => {
-    setAuthMethod('google')
-    setEmail('user@gmail.com') // simulate Google returning email
-  }
+  // ✅ Generate alphanumeric OTP
+  const generateCode = (length = 6) => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" // no confusing chars
+    let code = ""
 
-  // ✅ Main submit logic
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    if (authMethod === 'email') {
-      if (!email || !password) {
-        alert('Please enter email and password')
-        return
-      }
-
-      if (error) {
-        alert('Fix password requirements')
-        return
-      }
-
-      alert('Logged in with email + password')
-      onNavigate('#home')
+    for (let i = 0; i < length; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length))
     }
 
-    if (authMethod === 'google') {
-      if (!password) {
-        alert('Please set your password')
-        return
-      }
+    return code
+  }
 
-      if (error) {
-        alert('Fix password requirements')
-        return
-      }
+  // ✅ Send & store OTP
+  const sendCode = async () => {
+    const code = generateCode(6)
 
-      alert(`Google account ${email} connected successfully`)
+    await setDoc(doc(db, "emailCodes", email), {
+      code,
+      createdAt: Date.now()
+    })
+
+    console.log("Verification code:", code) // ⚠️ remove in production
+
+    // TODO: send email using EmailJS or backend
+  }
+
+  // ✅ Google login
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true)
+      const result = await signInWithPopup(auth, googleProvider)
+
+      setAuthMethod('google')
+      setEmail(result.user.email)
+
+      alert("Google login successful!")
       onNavigate('#home')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // ✅ Email auth + OTP
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (error) {
+      alert('Fix password requirements')
+      return
+    }
+
+    if (!email || !password) {
+      alert('Please enter email and password')
+      return
+    }
+
+    try {
+      setLoading(true)
+
+      if (isRegister) {
+        await createUserWithEmailAndPassword(auth, email, password)
+
+        await sendCode()
+
+        alert('Verification code sent to your email')
+        onNavigate('#verify')
+
+      } else {
+        await signInWithEmailAndPassword(auth, email, password)
+
+        await sendCode()
+
+        alert('Verification code sent')
+        onNavigate('#verify')
+      }
+
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -75,14 +131,14 @@ function AuthPage({ mode, onNavigate }) {
 
           <h1>{title}</h1>
 
-          {/* ✅ Google button */}
+          {/* Google login */}
           <button type="button" onClick={handleGoogleLogin}>
             🌐 Continue with Google
           </button>
 
           <div style={{ margin: '10px 0' }}>OR</div>
 
-          {/* ✅ Form */}
+          {/* Form */}
           <form onSubmit={handleSubmit}>
 
             <div className="form-field">
@@ -91,7 +147,7 @@ function AuthPage({ mode, onNavigate }) {
                 type="email"
                 value={email}
                 onChange={(e) => {
-                  setAuthMethod('email') // switch back if user types
+                  setAuthMethod('email')
                   setEmail(e.target.value)
                 }}
                 placeholder="Enter email"
@@ -111,9 +167,9 @@ function AuthPage({ mode, onNavigate }) {
               {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
 
-            <button type="submit">
-              {authMethod === 'google'
-                ? 'Continue with Google'
+            <button type="submit" disabled={loading}>
+              {loading
+                ? 'Processing...'
                 : isRegister
                 ? 'Register'
                 : 'Sign In'}
@@ -121,7 +177,7 @@ function AuthPage({ mode, onNavigate }) {
 
           </form>
 
-          {/* ✅ Navigation */}
+          {/* Navigation */}
           <div style={{ marginTop: '10px' }}>
             {isRegister ? (
               <>
