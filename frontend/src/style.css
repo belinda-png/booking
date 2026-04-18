@@ -823,68 +823,6 @@ button:hover {
   padding: 0;
 }
 
-.auth-step {
-  margin-bottom: 20px;
-}
-
-.auth-step h2 {
-  margin: 0 0 6px;
-  font-size: 1.5rem;
-}
-
-.auth-step p {
-  margin: 0;
-  color: var(--text-muted);
-}
-
-.account-list {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.account-item {
-  display: grid;
-  gap: 10px;
-  padding: 18px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: #f8fbff;
-  text-align: left;
-  cursor: pointer;
-}
-
-.account-item:hover {
-  border-color: rgba(15, 59, 185, 0.22);
-  box-shadow: 0 12px 30px rgba(15, 59, 185, 0.08);
-}
-
-.account-item.custom-email {
-  grid-template-columns: 1fr auto;
-  align-items: center;
-}
-
-.account-item.custom-email input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: #fff;
-}
-
-.account-item.custom-email .ghost-button {
-  margin-top: 0;
-  width: auto;
-}
-
-.account-icon {
-  font-size: 1.35rem;
-}
-
-.full-width {
-  width: 100%;
-}
-
 @media (max-width: 640px) {
   .auth-panel {
     padding: 24px;
