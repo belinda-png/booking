@@ -1,4 +1,25 @@
+import { useEffect, useState } from 'react'
+
 function App() {
+  const [route, setRoute] = useState(
+    window.location.hash === '#stays' ? '#stays' : '#home'
+  )
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setRoute(window.location.hash === '#stays' ? '#stays' : '#home')
+    }
+
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const isStays = route === '#stays'
+  const handleNavClick = (hash) => (event) => {
+    event.preventDefault()
+    window.location.hash = hash
+  }
+
   return (
     <div className="page-shell">
       <header className="topbar">
@@ -18,11 +39,25 @@ function App() {
         </div>
 
         <nav className="topnav">
-          <a href="#"><span className="nav-icon">🛏</span> Stays</a>
-          <a href="#"><span className="nav-icon">✈️</span> Flights</a>
-          <a href="#"><span className="nav-icon">🚗</span> Car rental</a>
-          <a href="#"><span className="nav-icon">🎡</span> Attractions</a>
-          <a href="#"><span className="nav-icon">🚕</span> Airport taxis</a>
+          <a
+            href="#stays"
+            className={isStays ? 'selected' : ''}
+            onClick={handleNavClick('#stays')}
+          >
+            <span className="nav-icon">🛏</span> Stays
+          </a>
+          <a href="#" onClick={handleNavClick('#home')}>
+            <span className="nav-icon">✈️</span> Flights
+          </a>
+          <a href="#" onClick={handleNavClick('#home')}>
+            <span className="nav-icon">🚗</span> Car rental
+          </a>
+          <a href="#" onClick={handleNavClick('#home')}>
+            <span className="nav-icon">🎡</span> Attractions
+          </a>
+          <a href="#" onClick={handleNavClick('#home')}>
+            <span className="nav-icon">🚕</span> Airport taxis
+          </a>
         </nav>
       </header>
 
@@ -84,7 +119,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section-head">
+        <section id="stays" className="section-head">
           <div>
             <p className="section-eyebrow">Homes guests love</p>
             <h2>Popular stays in Uganda</h2>
