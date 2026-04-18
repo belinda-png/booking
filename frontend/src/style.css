@@ -689,3 +689,142 @@ button:hover {
     grid-column: auto;
   }
 }
+
+.auth-page {
+  padding: 28px 0;
+}
+
+.auth-panel {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 36px;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+
+.auth-head {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.auth-subtitle {
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.social-row {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.social-button:hover {
+  background: var(--primary-soft);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+  color: var(--text-muted);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-field {
+  display: grid;
+  gap: 10px;
+}
+
+.form-field label {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: #f8fbff;
+}
+
+.verify-panel {
+  display: none;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.verify-panel.active {
+  display: grid;
+}
+
+.alert {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #e6f0ff;
+  color: #1c3d82;
+}
+
+.verify-code {
+  display: grid;
+  gap: 10px;
+}
+
+.verify-code input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  text-align: center;
+  letter-spacing: 0.35em;
+}
+
+.link-row {
+  margin-top: 22px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.link-row button {
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .auth-panel {
+    padding: 24px;
+  }
+}
