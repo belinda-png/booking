@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+import app from "../firebase";
 function AuthPage({ mode, onNavigate }) {
   const isRegister = mode === 'register'
 

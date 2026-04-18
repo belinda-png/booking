@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import AuthPage from './components/AuthPage.jsx'
-
+import app from "../firebase";
 function App() {
   const [route, setRoute] = useState(() => {
     const hash = window.location.hash
