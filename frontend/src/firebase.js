@@ -1,23 +1,20 @@
-// firebase.js
-
 import { initializeApp } from "firebase/app"
 import { getAuth, GoogleAuthProvider } from "firebase/auth"
-import { getFirestore } from "firebase/firestore" // ✅ ADD THIS
+import { getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_BUCKET",
-  messagingSenderId: "YOUR_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAKpt6hFqAlTS4knU7v1jrjUaBNPs76KRU",
+  authDomain: "booking-612fd.firebaseapp.com",
+  projectId: "booking-612fd",
+  storageBucket: "booking-612fd.appspot.com",
+  messagingSenderId: "912421559864",
+  appId: "1:912421559864:web:8eabb1092a92418f2d10cd"
 }
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
-// ✅ Auth
+// ✅ EXPORT THESE (VERY IMPORTANT)
 export const auth = getAuth(app)
 export const googleProvider = new GoogleAuthProvider()
-
-// ✅ Firestore (THIS FIXES YOUR ERROR)
 export const db = getFirestore(app)

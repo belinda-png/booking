@@ -776,6 +776,32 @@ button:hover {
   background: #f8fbff;
 }
 
+.form-group {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #f8fbff;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 .verify-panel {
   display: none;
   gap: 16px;
@@ -821,6 +847,68 @@ button:hover {
   font-weight: 700;
   cursor: pointer;
   padding: 0;
+}
+
+.auth-step {
+  margin-bottom: 20px;
+}
+
+.auth-step h2 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+}
+
+.auth-step p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.account-list {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.account-item {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: #f8fbff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.account-item:hover {
+  border-color: rgba(15, 59, 185, 0.22);
+  box-shadow: 0 12px 30px rgba(15, 59, 185, 0.08);
+}
+
+.account-item.custom-email {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.account-item.custom-email input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.account-item.custom-email .ghost-button {
+  margin-top: 0;
+}
+
+.account-icon {
+  font-size: 1.3rem;
+}
+
+.full-width {
+  width: 100%;
 }
 
 @media (max-width: 640px) {
