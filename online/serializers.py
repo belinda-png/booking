@@ -1,11 +1,14 @@
 from rest_framework import serializers
+
 from .models import (
     User,
     Vendor,
     Destination,
-    Listing,
-    ListingImage,
-    Availability,
+    Hotel,
+    HotelRoom,
+    Flight,
+    Car,
+    Tour,
     Booking,
     Payment,
     Review,
@@ -17,6 +20,12 @@ from .models import (
 # =========================
 
 class UserSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(
+        write_only=True,
+        required=True
+    )
+
     class Meta:
         model = User
         fields = [
@@ -29,11 +38,18 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "role",
         ]
-        extra_kwargs = {
-            "password": {"write_only": True}
-        }
+
+    def validate_role(self, value):
+
+        if value == "admin":
+            raise serializers.ValidationError(
+                "Admin accounts cannot be created through registration."
+            )
+
+        return value
 
     def create(self, validated_data):
+
         password = validated_data.pop("password")
 
         user = User.objects.create_user(
@@ -49,6 +65,7 @@ class UserSerializer(serializers.ModelSerializer):
 # =========================
 
 class VendorSerializer(serializers.ModelSerializer):
+
     user = UserSerializer(read_only=True)
 
     class Meta:
@@ -57,10 +74,14 @@ class VendorSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "business_name",
+            "vendor_type",
             "description",
+            "phone_number",
+            "address",
             "is_approved",
             "created_at",
         ]
+
         read_only_fields = [
             "id",
             "user",
@@ -70,20 +91,15 @@ class VendorSerializer(serializers.ModelSerializer):
 
 
 class VendorCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Vendor
         fields = [
             "business_name",
+            "vendor_type",
             "description",
-        ]
-
-
-class VendorUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vendor
-        fields = [
-            "business_name",
-            "description",
+            "phone_number",
+            "address",
         ]
 
 
@@ -92,6 +108,7 @@ class VendorUpdateSerializer(serializers.ModelSerializer):
 # =========================
 
 class DestinationSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Destination
         fields = [
@@ -99,136 +116,162 @@ class DestinationSerializer(serializers.ModelSerializer):
             "name",
             "country",
             "description",
-        ]
-        read_only_fields = ["id"]
-
-
-class DestinationCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Destination
-        fields = [
-            "name",
-            "country",
-            "description",
-        ]
-
-
-class DestinationUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Destination
-        fields = [
-            "name",
-            "country",
-            "description",
-        ]
-
-
-# =========================
-# LISTING IMAGE
-# =========================
-
-class ListingImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ListingImage
-        fields = [
-            "id",
-            "listing",
             "image",
-        ]
-        read_only_fields = ["id"]
-
-
-# =========================
-# LISTING
-# =========================
-
-class ListingSerializer(serializers.ModelSerializer):
-    images = ListingImageSerializer(many=True, read_only=True)
-    destination = DestinationSerializer(read_only=True)
-
-    class Meta:
-        model = Listing
-        fields = [
-            "id",
-            "vendor",
-            "destination",
-            "title",
-            "description",
-            "price_per_person",
-            "location",
-            "duration_days",
-            "is_active",
             "created_at",
-            "images",
         ]
+
         read_only_fields = [
             "id",
             "created_at",
-            "images",
         ]
 
 
-class ListingCreateSerializer(serializers.ModelSerializer):
+# =========================
+# HOTEL
+# =========================
+
+class HotelSerializer(serializers.ModelSerializer):
+
+    vendor = VendorSerializer(read_only=True)
+
     class Meta:
-        model = Listing
+        model = Hotel
         fields = [
+            "id",
+            "vendor",
+            "destination",
+            "name",
+            "description",
+            "address",
+            "price_per_night",
+            "rooms_available",
+            "rating",
+            "is_active",
+            "created_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "vendor",
+            "rating",
+            "created_at",
+        ]
+
+
+class HotelRoomSerializer(serializers.ModelSerializer):
+
+    hotel = serializers.PrimaryKeyRelatedField(
+        queryset=Hotel.objects.all()
+    )
+
+    class Meta:
+        model = HotelRoom
+        fields = [
+            "id",
+            "hotel",
+            "room_type",
+            "room_number",
+            "price_per_night",
+            "is_available",
+        ]
+
+        read_only_fields = [
+            "id",
+        ]
+
+
+# =========================
+# FLIGHT
+# =========================
+
+class FlightSerializer(serializers.ModelSerializer):
+
+    vendor = VendorSerializer(read_only=True)
+
+    class Meta:
+        model = Flight
+        fields = [
+            "id",
+            "vendor",
+            "airline_name",
+            "flight_number",
+            "departure_city",
+            "arrival_city",
+            "departure_date",
+            "departure_time",
+            "arrival_date",
+            "arrival_time",
+            "price",
+            "available_seats",
+            "is_active",
+            "created_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "vendor",
+            "created_at",
+        ]
+
+
+# =========================
+# CAR
+# =========================
+
+class CarSerializer(serializers.ModelSerializer):
+
+    vendor = VendorSerializer(read_only=True)
+
+    class Meta:
+        model = Car
+        fields = [
+            "id",
+            "vendor",
+            "brand",
+            "model",
+            "year",
+            "registration_number",
+            "seats",
+            "price_per_day",
+            "location",
+            "is_available",
+            "created_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "vendor",
+            "created_at",
+        ]
+
+
+# =========================
+# TOUR
+# =========================
+
+class TourSerializer(serializers.ModelSerializer):
+
+    vendor = VendorSerializer(read_only=True)
+
+    class Meta:
+        model = Tour
+        fields = [
+            "id",
             "vendor",
             "destination",
             "title",
             "description",
-            "price_per_person",
-            "location",
             "duration_days",
-        ]
-
-
-class ListingUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Listing
-        fields = [
-            "title",
-            "description",
             "price_per_person",
-            "location",
-            "duration_days",
-            "destination",
+            "available_slots",
             "is_active",
+            "created_at",
         ]
 
-
-# =========================
-# AVAILABILITY
-# =========================
-
-class AvailabilitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Availability
-        fields = [
+        read_only_fields = [
             "id",
-            "listing",
-            "date",
-            "available_slots",
-        ]
-        read_only_fields = ["id"]
-
-
-class AvailabilityCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Availability
-        fields = [
-            "listing",
-            "date",
-            "available_slots",
-        ]
-
-
-class AvailabilityUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Availability
-        fields = [
-            "listing",
-            "date",
-            "available_slots",
+            "vendor",
+            "created_at",
         ]
 
 
@@ -237,74 +280,93 @@ class AvailabilityUpdateSerializer(serializers.ModelSerializer):
 # =========================
 
 class BookingSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer(read_only=True)
+
+    hotel = HotelSerializer(read_only=True)
+
+    flight = FlightSerializer(read_only=True)
+
+    car = CarSerializer(read_only=True)
+
+    tour = TourSerializer(read_only=True)
+
     class Meta:
         model = Booking
+
         fields = [
             "id",
             "user",
-            "listing",
-            "date",
+            "booking_type",
+            "hotel",
+            "flight",
+            "car",
+            "tour",
+            "booking_date",
             "number_of_people",
             "total_price",
             "status",
             "created_at",
         ]
+
         read_only_fields = [
             "id",
-            "created_at",
-            "status",
-        ]
-
-
-class BookingDetailSerializer(serializers.ModelSerializer):
-    listing = ListingSerializer(read_only=True)
-    payment = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Booking
-        fields = [
-            "id",
             "user",
-            "listing",
-            "date",
-            "number_of_people",
             "total_price",
             "status",
             "created_at",
-            "payment",
         ]
-        read_only_fields = [
-            "id",
-            "created_at",
-            "status",
-            "payment",
-        ]
-
-    def get_payment(self, obj):
-        payment = getattr(obj, "payment", None)
-
-        if payment:
-            return PaymentSerializer(payment).data
-
-        return None
 
 
 class BookingCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Booking
+
         fields = [
-            "listing",
-            "date",
+            "booking_type",
+            "hotel",
+            "flight",
+            "car",
+            "tour",
+            "booking_date",
             "number_of_people",
         ]
 
+    def validate(self, data):
 
-class BookingUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Booking
-        fields = [
-            "status",
-        ]
+        booking_type = data.get("booking_type")
+
+        hotel = data.get("hotel")
+        flight = data.get("flight")
+        car = data.get("car")
+        tour = data.get("tour")
+
+        selected = {
+            "hotel": hotel,
+            "flight": flight,
+            "car": car,
+            "tour": tour,
+        }
+
+        if selected.get(booking_type) is None:
+            raise serializers.ValidationError(
+                f"You must select a {booking_type}."
+            )
+
+        for key, value in selected.items():
+
+            if key != booking_type and value is not None:
+                raise serializers.ValidationError(
+                    f"Only {booking_type} should be selected."
+                )
+
+        if data.get("number_of_people", 0) < 1:
+            raise serializers.ValidationError(
+                "Number of people must be at least 1."
+            )
+
+        return data
 
 
 # =========================
@@ -312,8 +374,10 @@ class BookingUpdateSerializer(serializers.ModelSerializer):
 # =========================
 
 class PaymentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Payment
+
         fields = [
             "id",
             "booking",
@@ -323,29 +387,12 @@ class PaymentSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
         ]
+
         read_only_fields = [
             "id",
+            "amount",
             "status",
             "created_at",
-        ]
-
-
-class PaymentCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = [
-            "booking",
-            "amount",
-            "method",
-            "transaction_id",
-        ]
-
-
-class PaymentUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = [
-            "status",
         ]
 
 
@@ -354,36 +401,50 @@ class PaymentUpdateSerializer(serializers.ModelSerializer):
 # =========================
 
 class ReviewSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Review
+
         fields = [
             "id",
             "user",
-            "listing",
+            "hotel",
+            "tour",
             "rating",
             "comment",
             "created_at",
         ]
+
         read_only_fields = [
             "id",
+            "user",
             "created_at",
         ]
 
+    def validate(self, data):
 
-class ReviewCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = [
-            "listing",
-            "rating",
-            "comment",
-        ]
+        hotel = data.get("hotel")
+        tour = data.get("tour")
 
+        if hotel and tour:
+            raise serializers.ValidationError(
+                "A review can be for a hotel or a tour, not both."
+            )
 
-class ReviewUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = [
-            "rating",
-            "comment",
-        ]
+        if not hotel and not tour:
+            raise serializers.ValidationError(
+                "You must select a hotel or a tour."
+            )
+
+        return data
+
+    def validate_rating(self, value):
+
+        if value < 1 or value > 5:
+            raise serializers.ValidationError(
+                "Rating must be between 1 and 5."
+            )
+
+        return value
