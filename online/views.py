@@ -19,7 +19,10 @@ class IsAdmin(permissions.BasePermission):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    def get_permissions(self):
+        if self.action in ["create"]:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated(), IsAdmin()]
     def get_queryset(self):
         return User.objects.filter(id=self.request.user.id)
 class VendorViewSet(viewsets.ModelViewSet):
