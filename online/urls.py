@@ -6,8 +6,7 @@ router.register(r'vendors', VendorViewSet)
 router.register(r'destinations', DestinationViewSet)
 router.register(r'listings', ListingViewSet)
 router.register(r'availability', AvailabilityViewSet)
-router.register(r'bookings', BookingViewSet)
 router.register(r'payments', PaymentViewSet)
-router.register(r'reviews', ReviewViewSet)
+router.register(r'bookings', BookingViewSet)
 
 urlpatterns = router.urls
