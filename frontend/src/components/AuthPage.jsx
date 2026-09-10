@@ -23,7 +23,7 @@ function AuthPage({ mode, onNavigate }) {
 
   // ✅ Password validation
   const validatePassword = (value) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/
+   const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
 
     if (!regex.test(value)) {
       setError('Password must contain letters and numbers')
@@ -62,8 +62,10 @@ function AuthPage({ mode, onNavigate }) {
     console.log("Verification code:", code)
   }
 
-  // ✅ Google Login (CLEAN FIX)
+  // ✅ Google Login (guarded against double-fire)
   const handleGoogleLogin = async () => {
+    if (loading) return // stops a second click while a popup is already open
+
     try {
       setLoading(true)
 
@@ -82,8 +84,11 @@ function AuthPage({ mode, onNavigate }) {
       }, 300)
 
     } catch (err) {
-      console.log(err)
-      setError(err.message)
+      // Ignore the harmless "cancelled-popup-request" noise from double calls
+      if (err.code !== 'auth/cancelled-popup-request') {
+        console.log(err)
+        setError(err.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -133,8 +138,8 @@ function AuthPage({ mode, onNavigate }) {
           <h1>{title}</h1>
 
           {/* Google login */}
-          <button type="button" onClick={handleGoogleLogin}>
-            🌐 Continue with Google
+          <button type="button" onClick={handleGoogleLogin} disabled={loading}>
+            {loading ? 'Signing in...' : '🌐 Continue with Google'}
           </button>
 
           <div style={{ margin: '10px 0' }}>OR</div>
