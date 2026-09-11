@@ -177,13 +177,13 @@ class Flight(models.Model):
         max_length=255
     )
 
-    departure_date = models.DateField()
+    departure_date = models.DateField(blank=True, null=True)
 
-    departure_time = models.TimeField()
+departure_time = models.TimeField(blank=True, null=True)
 
-    arrival_date = models.DateField()
+    arrival_date = models.DateField(blank=True, null=True)
 
-    arrival_time = models.TimeField()
+    arrival_time = models.TimeField(blank=True)
 
     price = models.DecimalField(
         max_digits=10,
@@ -218,7 +218,7 @@ class Car(models.Model):
 
     model = models.CharField(max_length=100)
 
-    year = models.PositiveIntegerField()
+    year = models.PositiveIntegerField(blank=True, null=True)
 
     registration_number = models.CharField(
         max_length=50,
@@ -226,7 +226,7 @@ class Car(models.Model):
     )
 
     seats = models.PositiveIntegerField(
-        default=4
+        default=4, blank=True, null=True
     )
 
     price_per_day = models.DecimalField(
@@ -268,13 +268,13 @@ class Tour(models.Model):
     )
 
     title = models.CharField(
-        max_length=255
+        max_length=255, blank=True, null=True
     )
 
-    description = models.TextField()
+    description = models.TextField(Blank=True, null=True)
 
     duration_days = models.PositiveIntegerField(
-        default=1
+        default=1, blank=True, null=True
     )
 
     price_per_person = models.DecimalField(
