@@ -166,15 +166,15 @@ class Flight(models.Model):
     airline_name = models.CharField(max_length=255)
 
     flight_number = models.CharField(
-        max_length=50
+        max_length=50, blank=True, null=True
     )
 
     departure_city = models.CharField(
-        max_length=255
+        max_length=255, blank=True, null=True
     )
 
     arrival_city = models.CharField(
-        max_length=255
+        max_length=255, blank=True, null=True   
     )
 
     departure_date = models.DateField(blank=True, null=True)
@@ -183,15 +183,15 @@ departure_time = models.TimeField(blank=True, null=True)
 
     arrival_date = models.DateField(blank=True, null=True)
 
-    arrival_time = models.TimeField(blank=True)
+    arrival_time = models.TimeField(blank=True, null=True)
 
     price = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2, blank=True, null=True
     )
 
     available_seats = models.PositiveIntegerField(
-        default=0
+        default=0, blank=True, null=True
     )
 
     is_active = models.BooleanField(default=True)
@@ -271,7 +271,7 @@ class Tour(models.Model):
         max_length=255, blank=True, null=True
     )
 
-    description = models.TextField(Blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     duration_days = models.PositiveIntegerField(
         default=1, blank=True, null=True
@@ -283,15 +283,15 @@ class Tour(models.Model):
     )
 
     available_slots = models.PositiveIntegerField(
-        default=0
+        default=0, blank=True, null=True
     )
 
     is_active = models.BooleanField(
-        default=True
+        default=True, blank=True, null=True
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True, blank=True, null=True
     )
 
     def __str__(self):
@@ -315,25 +315,25 @@ class HotelRoom(models.Model):
     hotel = models.ForeignKey(
         Hotel,
         on_delete=models.CASCADE,
-        related_name="rooms"
+        related_name="rooms", blank=True, null=True
     )
 
     room_type = models.CharField(
         max_length=20,
-        choices=ROOM_TYPES
+        choices=ROOM_TYPES, blank=True, null=True
     )
 
     room_number = models.CharField(
-        max_length=20
+        max_length=20, blank=True, null=True
     )
 
     price_per_night = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2, blank=True, null=True
     )
 
     is_available = models.BooleanField(
-        default=True
+        default=True, blank=True, null=True
     )
 
     def __str__(self):
@@ -363,12 +363,12 @@ class Booking(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="bookings"
+        related_name="bookings", blank=True, null=True
     )
 
     booking_type = models.CharField(
         max_length=20,
-        choices=BOOKING_TYPE_CHOICES
+        choices=BOOKING_TYPE_CHOICES, blank=True, null=True
     )
 
     hotel = models.ForeignKey(
@@ -406,22 +406,22 @@ class Booking(models.Model):
     booking_date = models.DateField()
 
     number_of_people = models.PositiveIntegerField(
-        default=1
+        default=1, blank=True, null=True
     )
 
     total_price = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2, blank=True, null=True
     )
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default="pending"
+        default="pending", blank=True, null=True
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True, blank=True, null=True
     )
 
     def __str__(self):
@@ -449,17 +449,17 @@ class Payment(models.Model):
     booking = models.OneToOneField(
         Booking,
         on_delete=models.CASCADE,
-        related_name="payment"
+        related_name="payment", blank=True, null=True
     )
 
     amount = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2, blank=True, null=True
     )
 
     method = models.CharField(
         max_length=30,
-        choices=PAYMENT_METHODS
+        choices=PAYMENT_METHODS, blank=True, null=True
     )
 
     transaction_id = models.CharField(
@@ -471,11 +471,11 @@ class Payment(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default="pending"
+        default="pending", blank=True, null=True
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True, blank=True, null=True
     )
 
     def __str__(self):
@@ -491,7 +491,7 @@ class Review(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="reviews"
+        related_name="reviews", blank=True, null=True
     )
 
     hotel = models.ForeignKey(
@@ -499,7 +499,7 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="reviews"
+        related_name="reviews", blank=True, null=True
     )
 
     tour = models.ForeignKey(
@@ -507,17 +507,17 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="reviews"
+        related_name="reviews", blank=True, null=True
     )
 
     rating = models.PositiveIntegerField()
 
     comment = models.TextField(
-        blank=True
+        blank=True, null=True
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True, blank=True, null=True
     )
 
     def __str__(self):
