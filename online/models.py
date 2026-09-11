@@ -178,12 +178,10 @@ class Flight(models.Model):
     )
 
     departure_date = models.DateField(blank=True, null=True)
+    departure_time = models.TimeField(blank=True, null=True)
+    arrival_date = models.DateField()
 
-departure_time = models.TimeField(blank=True, null=True)
-
-    arrival_date = models.DateField(blank=True, null=True)
-
-    arrival_time = models.TimeField(blank=True, null=True)
+    arrival_time = models.TimeField()
 
     price = models.DecimalField(
         max_digits=10,
@@ -491,7 +489,7 @@ class Review(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="reviews", blank=True, null=True
+        related_name="reviews"
     )
 
     hotel = models.ForeignKey(
@@ -499,7 +497,7 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="reviews", blank=True, null=True
+        related_name="reviews"
     )
 
     tour = models.ForeignKey(
@@ -507,7 +505,7 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="reviews", blank=True, null=True
+        related_name="reviews"
     )
 
     rating = models.PositiveIntegerField()
