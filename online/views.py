@@ -61,7 +61,6 @@ class IsAdmin(permissions.BasePermission):
             and request.user.role == "admin"
         )
 
-
 # =====================================================
 # USERS
 # =====================================================
@@ -88,7 +87,6 @@ class UserViewSet(viewsets.ModelViewSet):
             id=self.request.user.id
         )
 
-
 # =====================================================
 # VENDORS
 # =====================================================
@@ -107,9 +105,8 @@ class VendorViewSet(viewsets.ModelViewSet):
         return VendorSerializer
 
     def get_permissions(self):
-
         if self.action == "create":
-            return [IsVendor()]
+            return [IsAdmin()]
 
         if self.action == "approve_vendor":
             return [IsAdmin()]

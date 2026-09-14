@@ -95,11 +95,15 @@ class VendorCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vendor
         fields = [
+            "id",
             "business_name",
             "vendor_type",
             "description",
             "phone_number",
             "address",
+        ]
+        read_only_fields = [
+            "id",
         ]
 
 
