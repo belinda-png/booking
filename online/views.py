@@ -162,8 +162,9 @@ class VendorViewSet(viewsets.ModelViewSet):
 class DestinationViewSet(viewsets.ModelViewSet):
 
     queryset = Destination.objects.all()
-
     serializer_class = DestinationSerializer
+
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_permissions(self):
 
