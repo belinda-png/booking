@@ -46,11 +46,15 @@ class IsVendor(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
+        print("USER:", request.user)
+        print("USER ID:", request.user.id)
+        print("ROLE:", request.user.role)
+        print("AUTHENTICATED:", request.user.is_authenticated)
+
         return (
             request.user.is_authenticated
             and request.user.role == "vendor"
         )
-
 
 class IsAdmin(permissions.BasePermission):
 
