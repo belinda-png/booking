@@ -88,11 +88,9 @@ class UserViewSet(viewsets.ModelViewSet):
 # =====================================================
 # VENDORS
 # =====================================================
-
 class VendorViewSet(viewsets.ModelViewSet):
 
     queryset = Vendor.objects.all()
-
     serializer_class = VendorSerializer
 
     def get_serializer_class(self):
@@ -103,8 +101,9 @@ class VendorViewSet(viewsets.ModelViewSet):
         return VendorSerializer
 
     def get_permissions(self):
+
         if self.action == "create":
-            return [IsAdmin()]
+            return [IsVendor()]
 
         if self.action == "approve_vendor":
             return [IsAdmin()]
@@ -122,25 +121,18 @@ class VendorViewSet(viewsets.ModelViewSet):
             return Vendor.objects.all()
 
         if user.role == "vendor":
-            return Vendor.objects.filter(
-                user=user
-            )
+            return Vendor.objects.filter(user=user)
 
         return Vendor.objects.none()
 
     def perform_create(self, serializer):
 
-        if Vendor.objects.filter(
-            user=self.request.user
-        ).exists():
-
+        if Vendor.objects.filter(user=self.request.user).exists():
             raise PermissionDenied(
                 "You already have a vendor profile."
             )
 
-        serializer.save(
-            user=self.request.user
-        )
+        serializer.save(user=self.request.user)
 
     @action(
         detail=True,
@@ -151,13 +143,11 @@ class VendorViewSet(viewsets.ModelViewSet):
         vendor = self.get_object()
 
         vendor.is_approved = True
-
         vendor.save()
 
         return Response({
             "message": "Vendor approved successfully."
         })
-
 
 # =====================================================
 # DESTINATIONS
