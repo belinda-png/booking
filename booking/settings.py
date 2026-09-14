@@ -27,6 +27,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Tourism Booking API",
     "DESCRIPTION": "API for tourism booking platform",
     "VERSION": "1.0.0",
+    "COMPONENT_SPLIT_REQUEST": True,
 }
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
