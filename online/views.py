@@ -6,6 +6,7 @@ from rest_framework import request, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .models import (
     User,
