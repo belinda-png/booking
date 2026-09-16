@@ -38,7 +38,7 @@ SECRET_KEY = 'django-insecure-e+-x@ihgfpc2d_l1&%2u(v6h0-*p_bio$v^t8!ojja8wm0%^(b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'booking-app-production.up.railway.app']
 
 AUTH_USER_MODEL = 'online.User'
 # Application definition
