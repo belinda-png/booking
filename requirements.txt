@@ -4,3 +4,4 @@ psycopg2-binary
 drf-spectacular
 djangorestframework-simplejwt
 Pillow
+dj-database-url
