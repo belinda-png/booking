@@ -1,131 +1,39 @@
+import { GoogleLogin } from '@react-oauth/google'
 import { useState } from 'react'
-// import { auth, googleProvider, db } from "../firebase"
-import {Auth, googleProvider, db}
-
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup
-} from "auth"
-
-// import { doc, setDoc } from "firebase/firestore"
 
 function AuthPage({ mode, onNavigate }) {
   const isRegister = mode === 'register'
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const title = isRegister
-    ? 'Create your account'
-    : 'Sign in to your account'
+  const handleGoogleSuccess = async ({ credential }) => {
+    if (!credential) {
+      setError('Google did not return an account credential. Please try again.')
+      return
+    }
 
-  // ✅ Password validation
-  const validatePassword = (value) => {
-   const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
-
-    if (!regex.test(value)) {
-      setError('Password must contain letters and numbers')
-    } else {
+    try {
+      setLoading(true)
       setError('')
-    }
-  }
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+      const response = await fetch(`${apiUrl}/api/v1/auth/google/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential }),
+      })
 
-  const handlePasswordChange = (e) => {
-    const value = e.target.value
-    setPassword(value)
-    validatePassword(value)
-  }
-
-  // ✅ OTP generator
-  const generateCode = (length = 6) => {
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-    let code = ""
-
-    for (let i = 0; i < length; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
-
-    return code
-  }
-
-  // ✅ Save OTP to Firestore
-  const sendCode = async (userEmail) => {
-    const code = generateCode(6)
-
-    await setDoc(doc(db, "emailCodes", userEmail), {
-      code,
-      createdAt: Date.now()
-    })
-
-    console.log("Verification code:", code)
-  }
-
-  // ✅ Google Login (guarded against double-fire)
-  const handleGoogleLogin = async () => {
-    if (loading) return // stops a second click while a popup is already open
-
-    try {
-      setLoading(true)
-
-      const result = await signInWithPopup(auth, googleProvider)
-
-      const userEmail = result.user.email
-      setEmail(userEmail)
-
-      await sendCode(userEmail)
-
-      alert("Google login successful. Verification code sent.")
-
-      // ✅ small delay prevents navigation bugs
-      setTimeout(() => {
-        onNavigate('#verify')
-      }, 300)
-
-    } catch (err) {
-      // Ignore the harmless "cancelled-popup-request" noise from double calls
-      if (err.code !== 'auth/cancelled-popup-request') {
-        console.log(err)
-        setError(err.message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // ✅ Email auth + OTP
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    if (!email || !password) {
-      return alert('Please enter email and password')
-    }
-
-    if (error) {
-      return alert('Fix password requirements')
-    }
-
-    try {
-      setLoading(true)
-
-      if (isRegister) {
-        await createUserWithEmailAndPassword(auth, email, password)
-      } else {
-        await signInWithEmailAndPassword(auth, email, password)
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.detail || 'Google sign-in failed.')
       }
 
-      await sendCode(email)
-
-      alert('Verification code sent')
-
-      setTimeout(() => {
-        onNavigate('#verify')
-      }, 300)
-
-    } catch (err) {
-      setError(err.message)
+      localStorage.setItem('accessToken', data.access)
+      localStorage.setItem('refreshToken', data.refresh)
+      localStorage.setItem('googleUser', JSON.stringify(data.user))
+      onNavigate('#home')
+    } catch (authError) {
+      setError(authError.message)
     } finally {
       setLoading(false)
     }
@@ -136,42 +44,14 @@ function AuthPage({ mode, onNavigate }) {
       <section className="auth-page">
         <div className="auth-panel">
 
-          <h1>{title}</h1>
-
-          {/* Google login */}
-          <button type="button" onClick={handleGoogleLogin} disabled={loading}>
-            {loading ? 'Signing in...' : '🌐 Continue with Google'}
-          </button>
-
-          <div style={{ margin: '10px 0' }}>OR</div>
-
-          {/* Email form */}
-          <form onSubmit={handleSubmit}>
-
-            <div className="form-field">
-              <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div className="form-field">
-              <label>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-            </div>
-
-            <button type="submit" disabled={loading}>
-              {loading ? 'Processing...' : isRegister ? 'Register' : 'Sign In'}
-            </button>
-
-          </form>
+          <h1>{isRegister ? 'Create your account' : 'Sign in to your account'}</h1>
+          <p>Use your Google account to continue.</p>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError('Google sign-in was not completed. Please try again.')}
+            useOneTap={!loading}
+          />
+          {error && <p style={{ color: 'red' }}>{error}</p>}
 
         </div>
       </section>
