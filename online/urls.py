@@ -12,7 +12,9 @@ from .views import (
     BookingViewSet,
     PaymentViewSet,
     ReviewViewSet,
+    GoogleAuthView,
 )
+from django.urls import path
 
 
 router = DefaultRouter()
@@ -65,4 +67,7 @@ router.register(
 )
 
 
-urlpatterns = router.urls
+urlpatterns = [
+    path("auth/google/", GoogleAuthView.as_view(), name="google-auth"),
+    *router.urls,
+]

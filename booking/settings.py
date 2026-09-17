@@ -41,6 +41,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'booking-app-production.up.railway.app']
 
 AUTH_USER_MODEL = 'online.User'
+GOOGLE_CLIENT_ID = os.environ.get(
+    'GOOGLE_CLIENT_ID',
+    '912421559864-5597jlerkouhup0en94tv487omc34j8o.apps.googleusercontent.com'
+)
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,6 +57,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_spectacular',
+    'corsheaders',
 
     'online',
 ]
@@ -61,6 +66,7 @@ INTERNAL_IPS = [
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,6 +75,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
    
 
+]
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        'CORS_ALLOWED_ORIGINS',
+        'http://localhost:5173,http://127.0.0.1:5173'
+    ).split(',')
+    if origin.strip()
 ]
 
 ROOT_URLCONF = 'booking.urls'
