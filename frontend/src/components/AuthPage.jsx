@@ -1,13 +1,14 @@
 import { useState } from 'react'
 // import { auth, googleProvider, db } from "../firebase"
+import {Auth, googleProvider, db}
 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup
-} from "firebase/auth"
+} from "auth"
 
-import { doc, setDoc } from "firebase/firestore"
+// import { doc, setDoc } from "firebase/firestore"
 
 function AuthPage({ mode, onNavigate }) {
   const isRegister = mode === 'register'
