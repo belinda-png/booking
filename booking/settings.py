@@ -90,8 +90,8 @@ ROOT_URLCONF = 'booking.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # you can leave this empty
-        'APP_DIRS': True,  # 👈 THIS MUST BE TRUE
+        'DIRS': [],  
+        'APP_DIRS': True,  
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
