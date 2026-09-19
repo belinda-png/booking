@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import AuthPage from './components/AuthPage.jsx'
 import AdminDashboard from './admin/AdminDashboard.jsx'
+import VendorDashboard from './vendor/VendorDashboard.jsx'
 function App() {
   const [route, setRoute] = useState(() => {
     const hash = window.location.hash
-    return ['#stays', '#register', '#signin', '#vendor-signin', '#admin', '#admin/vendors', '#admin/bookings'].includes(hash) ? hash : '#home'
+    return ['#stays', '#register', '#signin', '#vendor-signin', '#vendor', '#admin', '#admin/vendors', '#admin/bookings'].includes(hash) ? hash : '#home'
   })
 
   useEffect(() => {
     const onHashChange = () => {
       const hash = window.location.hash
-      setRoute(['#stays', '#register', '#signin', '#vendor-signin', '#admin', '#admin/vendors', '#admin/bookings'].includes(hash) ? hash : '#home')
+      setRoute(['#stays', '#register', '#signin', '#vendor-signin', '#vendor', '#admin', '#admin/vendors', '#admin/bookings'].includes(hash) ? hash : '#home')
     }
 
     window.addEventListener('hashchange', onHashChange)
@@ -21,6 +22,7 @@ function App() {
   const isRegister = route === '#register'
   const isSignin = route === '#signin'
   const isVendorSignin = route === '#vendor-signin'
+  const isVendorDashboard = route === '#vendor'
   const isAdmin = route.startsWith('#admin')
   const handleNavClick = (hash) => (event) => {
     event.preventDefault()
@@ -254,6 +256,7 @@ function App() {
   )
 
   if (isAdmin) return <AdminDashboard />
+  if (isVendorDashboard) return <VendorDashboard onNavigate={(hash) => { window.location.hash = hash }} />
 
   return (
     <div className="page-shell">

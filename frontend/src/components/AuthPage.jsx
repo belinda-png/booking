@@ -76,10 +76,11 @@ function AuthPage({ mode, onNavigate }) {
         if (!vendorResponse.ok) throw new Error('This account is not registered as a vendor.')
         const vendors = await vendorResponse.json()
         if (!Array.isArray(vendors) || vendors.length === 0) throw new Error('No vendor profile was found for this account.')
+        localStorage.setItem('vendorProfile', JSON.stringify(vendors[0]))
       }
       localStorage.setItem('accessToken', data.access)
       localStorage.setItem('refreshToken', data.refresh)
-      onNavigate('#home')
+      onNavigate(isVendor ? '#vendor' : '#home')
     } catch (authError) {
       setError(authError.message)
     } finally {
