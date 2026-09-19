@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import AuthPage from './components/AuthPage.jsx'
+import AdminDashboard from './admin/AdminDashboard.jsx'
 function App() {
   const [route, setRoute] = useState(() => {
     const hash = window.location.hash
-    return ['#stays', '#register', '#signin'].includes(hash) ? hash : '#home'
+    return ['#stays', '#register', '#signin', '#admin', '#admin/vendors', '#admin/bookings'].includes(hash) ? hash : '#home'
   })
 
   useEffect(() => {
     const onHashChange = () => {
       const hash = window.location.hash
-      setRoute(['#stays', '#register', '#signin'].includes(hash) ? hash : '#home')
+      setRoute(['#stays', '#register', '#signin', '#admin', '#admin/vendors', '#admin/bookings'].includes(hash) ? hash : '#home')
     }
 
     window.addEventListener('hashchange', onHashChange)
@@ -19,6 +20,7 @@ function App() {
   const isStays = route === '#stays'
   const isRegister = route === '#register'
   const isSignin = route === '#signin'
+  const isAdmin = route.startsWith('#admin')
   const handleNavClick = (hash) => (event) => {
     event.preventDefault()
     window.location.hash = hash
@@ -249,6 +251,8 @@ function App() {
       </section>
     </>
   )
+
+  if (isAdmin) return <AdminDashboard />
 
   return (
     <div className="page-shell">
