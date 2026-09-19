@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AdminDataProvider, useAdminData } from './AdminDataContext.jsx'
+import { ApprovalQueue } from './ApprovalQueue.jsx'
 
 const statusLabels = { approved: 'Approved', pending: 'Pending', rejected: 'Rejected', suspended: 'Suspended', completed: 'Completed', cancelled: 'Cancelled' }
 function StatusBadge({ status }) { return <span className={`admin-status status-${status}`}>{statusLabels[status] || status}</span> }
@@ -32,7 +33,7 @@ function DashboardContent() {
   const [page, setPage] = useState(window.location.hash === '#admin/vendors' ? 'vendors' : window.location.hash === '#admin/bookings' ? 'bookings' : 'overview')
   const navigate = (nextPage) => { setPage(nextPage); window.location.hash = nextPage === 'overview' ? '#admin' : `#admin/${nextPage}` }
   const { notice } = useAdminData()
-  return <div className="admin-shell"><Sidebar page={page} navigate={navigate} /><main className="admin-main"><header className="admin-topbar"><div className="admin-breadcrumb">Admin <span>/</span> {page[0].toUpperCase() + page.slice(1)}</div><div className="admin-top-actions"><button aria-label="Notifications" className="notification-button">♢<i /></button><div className="admin-user">AM <span>Admin manager</span>⌄</div></div></header><div className="admin-content">{page === 'overview' && <Overview navigate={navigate} />}{page === 'vendors' && <VendorsPage />}{page === 'bookings' && <BookingsPage />}</div>{notice && <div className="admin-toast">✓ {notice}</div>}</main></div>
+  return <div className="admin-shell"><Sidebar page={page} navigate={navigate} /><main className="admin-main"><header className="admin-topbar"><div className="admin-breadcrumb">Admin <span>/</span> {page[0].toUpperCase() + page.slice(1)}</div><div className="admin-top-actions"><button aria-label="Notifications" className="notification-button">♢<i /></button><div className="admin-user">AM <span>Admin manager</span>⌄</div></div></header><div className="admin-content">{page === 'overview' && <><Overview navigate={navigate} /><div className="admin-queue-row"><ApprovalQueue navigate={navigate} /></div></>}{page === 'vendors' && <VendorsPage />}{page === 'bookings' && <BookingsPage />}</div>{notice && <div className="admin-toast">✓ {notice}</div>}</main></div>
 }
 
 export default function AdminDashboard() { return <AdminDataProvider><DashboardContent /></AdminDataProvider> }
