@@ -51,7 +51,62 @@ from drf_spectacular.utils import extend_schema
 from django.conf import settings
 
 from .models import User
+from django.core.mail import send_mail
+from django.utils import timezone
+from datetime import timedelta
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiResponse
+)
+
+from .models import EmailVerificationOTP, User
+from .serializers import VerifyEmailOTPSerializer
+
+
+class VerifyEmailOTPView(APIView):
+
+    @extend_schema(
+        request=VerifyEmailOTPSerializer,
+        responses={
+            200: OpenApiResponse(
+                description="Email verified successfully."
+            ),
+            400: OpenApiResponse(
+                description="Invalid or expired verification code."
+            ),
+        },
+    )
+    def post(self, request):
+
+        serializer = VerifyEmailOTPSerializer(
+            data=request.data
+        )
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = serializer.validated_data["user"]
+        otp = serializer.validated_data["otp"]
+
+        user.is_verified = True
+        user.save(update_fields=["is_verified"])
+
+        otp.delete()
+
+        return Response(
+            {
+                "message": "Email verified successfully."
+            },
+            status=status.HTTP_200_OK
+        )
 # =====================================================
 # PERMISSIONS
 # =====================================================
