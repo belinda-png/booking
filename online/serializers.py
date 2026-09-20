@@ -18,6 +18,16 @@ from .models import (
 # =========================
 # USER
 # =========================
+class SendEmailOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "No user found with this email."
+            )
+
+        return value
 
 class UserSerializer(serializers.ModelSerializer):
 
