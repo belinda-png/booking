@@ -32,6 +32,25 @@ from .models import (
     responses=GoogleAuthResponseSerializer,
 )
 class GoogleAuthView(APIView):
+    class GoogleAuthSerializer(serializers.Serializer):
+    credential = serializers.CharField()
+
+
+class GoogleUserSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    email = serializers.EmailField()
+    name = serializers.CharField()
+    picture = serializers.CharField(
+        allow_null=True,
+        required=False
+    )
+    created = serializers.BooleanField()
+
+
+class GoogleAuthResponseSerializer(serializers.Serializer):
+    access = serializers.CharField()
+    refresh = serializers.CharField()
+    user = GoogleUserSerializer()
 
 class UserSerializer(serializers.ModelSerializer):
 
