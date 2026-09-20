@@ -107,6 +107,64 @@ class VerifyEmailOTPView(APIView):
             },
             status=status.HTTP_200_OK
         )
+    class SendEmailOTPView(APIView):
+
+    @extend_schema(
+        request=SendEmailOTPSerializer,
+        responses={
+            200: OpenApiResponse(
+                description="Verification code sent successfully."
+            ),
+            400: OpenApiResponse(
+                description="Invalid email."
+            ),
+        },
+    )
+    def post(self, request):
+
+        serializer = SendEmailOTPSerializer(
+            data=request.data
+        )
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        email = serializer.validated_data["email"]
+
+        user = User.objects.get(email=email)
+
+        code = EmailVerificationOTP.generate_code()
+
+        EmailVerificationOTP.objects.filter(
+            user=user
+        ).delete()
+
+        otp = EmailVerificationOTP.objects.create(
+            user=user,
+            code=code,
+            expires_at=timezone.now() + timedelta(minutes=10)
+        )
+
+        send_mail(
+            subject="Your Email Verification Code",
+            message=(
+                f"Your verification code is: {code}\n\n"
+                "This code will expire in 10 minutes."
+            ),
+            from_email=None,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return Response(
+            {
+                "message": "Verification code sent to your email."
+            },
+            status=status.HTTP_200_OK
+        )
 # =====================================================
 # PERMISSIONS
 # =====================================================
