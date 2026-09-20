@@ -43,7 +43,12 @@ from .serializers import (
     ReviewSerializer,
 )
 
-
+@extend_schema(
+    request=GoogleAuthSerializer,
+    responses={
+        200: GoogleAuthSerializer,
+    },
+)
 class GoogleAuthView(APIView):
 
     permission_classes = [permissions.AllowAny]
@@ -63,6 +68,7 @@ class GoogleAuthView(APIView):
                 google_requests.Request(),
                 settings.GOOGLE_CLIENT_ID,
             )
+
         except ValueError:
             return Response(
                 {"detail": "The Google credential is invalid or expired."},
@@ -70,6 +76,7 @@ class GoogleAuthView(APIView):
             )
 
         email = google_user.get("email")
+
         if not email or not google_user.get("email_verified"):
             return Response(
                 {"detail": "A verified Google email is required."},
@@ -77,6 +84,7 @@ class GoogleAuthView(APIView):
             )
 
         username = f"google_{google_user['sub']}"
+
         user, created = User.objects.get_or_create(
             email=email,
             defaults={
@@ -94,6 +102,7 @@ class GoogleAuthView(APIView):
             )
 
         refresh = RefreshToken.for_user(user)
+
         return Response({
             "access": str(refresh.access_token),
             "refresh": str(refresh),
@@ -105,7 +114,6 @@ class GoogleAuthView(APIView):
                 "created": created,
             },
         })
-
 
 # =====================================================
 # PERMISSIONS
