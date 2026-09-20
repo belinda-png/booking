@@ -1,14 +1,5 @@
-from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
-import datetime
-import pytz
-import re
-import requests
-import json
-import logging
-import os
-import stripe
-import extend_schema
+
 from .models import (
     User,
     Vendor,
@@ -27,12 +18,7 @@ from .models import (
 # =========================
 # USER
 # =========================
-@extend_schema(
-    request=GoogleAuthSerializer,
-    responses=GoogleAuthResponseSerializer,
-)
-class GoogleAuthView(APIView):
-    class GoogleAuthSerializer(serializers.Serializer):
+class GoogleAuthSerializer(serializers.Serializer):
     credential = serializers.CharField()
 
 
