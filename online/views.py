@@ -10,9 +10,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
-from drf_spectacular.utils import extend_schema
 
 from .models import (
     User,
@@ -43,7 +40,21 @@ from .serializers import (
     PaymentSerializer,
     ReviewSerializer,
 )
+from rest_framework import status, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
+from drf_spectacular.utils import extend_schema
+
+from django.conf import settings
+
+from .models import User
+from .serializers import GoogleAuthSerializer
 @extend_schema(
     request=GoogleAuthSerializer,
     responses={
