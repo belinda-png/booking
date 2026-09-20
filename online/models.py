@@ -5,6 +5,29 @@ from django.contrib.auth.models import AbstractUser
 # =========================
 # USER
 # =========================
+import random
+from datetime import timedelta
+
+from django.db import models
+from django.utils import timezone
+
+
+class EmailVerificationOTP(models.Model):
+    user = models.ForeignKey(
+        "User",
+        on_delete=models.CASCADE,
+        related_name="email_verification_otps"
+    )
+    code = models.CharField(max_length=6)
+    expires_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timezone.now() < self.expires_at
+
+    @staticmethod
+    def generate_code():
+        return str(random.randint(100000, 999999))
 
 class User(AbstractUser):
     ROLE_CHOICES = [
