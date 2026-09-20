@@ -2,12 +2,9 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.db import transaction
-from google.auth.transport import requests as google_requests
-from google.oauth2 import id_token
 
 from rest_framework import request, viewsets, permissions, status
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser
 
