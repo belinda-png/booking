@@ -1,4 +1,12 @@
 from rest_framework import serializers
+import datetime
+import pytz
+import re
+import requests
+import json
+import logging
+import os
+import stripe
 
 from .models import (
     User,
@@ -18,6 +26,11 @@ from .models import (
 # =========================
 # USER
 # =========================
+@extend_schema(
+    request=GoogleAuthSerializer,
+    responses=GoogleAuthResponseSerializer,
+)
+class GoogleAuthView(APIView):
 
 class UserSerializer(serializers.ModelSerializer):
 
