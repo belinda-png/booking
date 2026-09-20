@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 import datetime
 import pytz
@@ -7,7 +8,7 @@ import json
 import logging
 import os
 import stripe
-
+import extend_schema
 from .models import (
     User,
     Vendor,
