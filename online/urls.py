@@ -64,9 +64,3 @@ router.register(
     ReviewViewSet,
     basename="reviews"
 )
-
-
-urlpatterns = [
-    path("auth/google/", GoogleAuthView.as_view(), name="google-auth"),
-    *router.urls,
-]
