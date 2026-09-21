@@ -12,7 +12,6 @@ from .views import (
     BookingViewSet,
     PaymentViewSet,
     ReviewViewSet,
-    GoogleAuthView,
 )
 from django.urls import path
 
