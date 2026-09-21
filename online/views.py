@@ -36,6 +36,9 @@ from .serializers import (
     BookingCreateSerializer,
     PaymentSerializer,
     ReviewSerializer,
+    SendEmailOTPSerializer,
+    VerifyEmailOTPSerializer
+    
 )
 from rest_framework import status, permissions
 from rest_framework.response import Response
@@ -47,8 +50,6 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
 from drf_spectacular.utils import extend_schema
-
-from django.conf import settings
 
 from .models import User
 from django.core.mail import send_mail
@@ -65,7 +66,7 @@ from drf_spectacular.utils import (
 )
 
 from .models import EmailVerificationOTP, User
-from .serializers import VerifyEmailOTPSerializer
+
 
 
 class VerifyEmailOTPView(APIView):
