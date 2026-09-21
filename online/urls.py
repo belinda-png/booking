@@ -12,6 +12,8 @@ from .views import (
     BookingViewSet,
     PaymentViewSet,
     ReviewViewSet,
+    SendEmailOTPView,
+     VerifyEmailOTPView,
 )
 from django.urls import path
 

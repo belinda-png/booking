@@ -22,10 +22,7 @@ from django.http import JsonResponse
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from booking import (
-    SendEmailOTPView,
-    VerifyEmailOTPView,
-)
+
 
 def api_root(request):
     return JsonResponse({
