@@ -66,3 +66,20 @@ router.register(
     ReviewViewSet,
     basename="reviews"
 )
+from django.urls import path
+
+
+
+urlpatterns = [
+    path(
+        "auth/send-email-otp/",
+        SendEmailOTPView.as_view(),
+        name="send-email-otp"
+    ),
+
+    path(
+        "auth/verify-email-otp/",
+        VerifyEmailOTPView.as_view(),
+        name="verify-email-otp"
+    ),
+]
