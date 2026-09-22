@@ -113,7 +113,7 @@ WSGI_APPLICATION = 'booking.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
+        default='postgresql://postgres:postgres@localhost:5432/booking_db'
     )
 }
 

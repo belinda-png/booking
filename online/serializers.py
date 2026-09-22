@@ -29,35 +29,6 @@ class SendEmailOTPSerializer(serializers.Serializer):
 
         return value
 
-
-class VerifyEmailOTPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    otp = serializers.CharField(max_length=6, min_length=6)
-
-    def validate(self, attrs):
-        from .models import EmailVerificationOTP
-
-        try:
-            user = User.objects.get(email=attrs["email"])
-        except User.DoesNotExist:
-            raise serializers.ValidationError(
-                {"email": "No user found with this email."}
-            )
-
-        verification = EmailVerificationOTP.objects.filter(
-            user=user,
-            code=attrs["otp"],
-        ).order_by("-created_at").first()
-
-        if verification is None or not verification.is_valid():
-            raise serializers.ValidationError(
-                {"otp": "Invalid or expired verification code."}
-            )
-
-        attrs["user"] = user
-        attrs["otp"] = verification
-        return attrs
-
 class UserSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
