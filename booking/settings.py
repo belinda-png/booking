@@ -168,3 +168,13 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # Where booking notifications go (can be same as EMAIL_HOST_USER or different inbox)
 BOOKING_NOTIFICATION_EMAIL = os.environ.get('BOOKING_NOTIFICATION_EMAIL', EMAIL_HOST_USER)
 GOOGLE_CLIENT_ID = "912421559864-5597jlerkouhup0en94tv487omc34j8o.apps.googleusercontent.com"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
