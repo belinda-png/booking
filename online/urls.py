@@ -66,13 +66,17 @@ router.register(
     ReviewViewSet,
     basename="reviews"
 )
-router.register(
-    r"send-email-otp",
-    SendEmailOTPView,
-    basename="send-email-otp"
-)
-router.register(
-    r"verify-email-otp",
-    VerifyEmailOTPView,
-    basename="verify-email-otp"
-)
+
+
+urlpatterns = router.urls + [
+    path(
+        "auth/send-email-otp/",
+        SendEmailOTPView.as_view(),
+        name="send-email-otp",
+    ),
+    path(
+        "auth/verify-email-otp/",
+        VerifyEmailOTPView.as_view(),
+        name="verify-email-otp",
+    ),
+]
