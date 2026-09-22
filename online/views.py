@@ -108,7 +108,7 @@ class VerifyEmailOTPView(APIView):
             },
             status=status.HTTP_200_OK
         )
-    class SendEmailOTPView(APIView):
+class SendEmailOTPView(APIView):
 
     @extend_schema(
         request=SendEmailOTPSerializer,
