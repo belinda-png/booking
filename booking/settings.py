@@ -174,3 +174,5 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # Where booking notifications go (can be same as EMAIL_HOST_USER or different inbox)
 BOOKING_NOTIFICATION_EMAIL = os.environ.get('BOOKING_NOTIFICATION_EMAIL', EMAIL_HOST_USER)
 GOOGLE_CLIENT_ID = "912421559864-5597jlerkouhup0en94tv487omc34j8o.apps.googleusercontent.com"
+print("EMAIL_HOST_USER =", EMAIL_HOST_USER)
+print("EMAIL_HOST_PASSWORD EXISTS =", bool(EMAIL_HOST_PASSWORD))
