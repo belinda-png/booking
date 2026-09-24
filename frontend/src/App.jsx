@@ -3,7 +3,7 @@ import AuthPage from './components/AuthPage.jsx'
 import AdminDashboard from './admin/AdminDashboard.jsx'
 import VendorDashboard from './vendor/VendorDashboard.jsx'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
-import AuthPage from './components/AuthPage.jsx'
+
 function App() {
 
   const [route, setRoute] = useState(() => {
