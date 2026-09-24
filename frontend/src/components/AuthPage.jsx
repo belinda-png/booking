@@ -1,6 +1,6 @@
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 
-<GoogleOAuthProvider clientId={YOUR_GOOGLE_CLIENT_ID}>
+<GoogleOAuthProvider clientId={912421559864-5597jlerkouhup0en94tv487omc34j8o.apps.googleusercontent.com}>
     <App />
 </GoogleOAuthProvider>
 import { useEffect, useState } from 'react'
