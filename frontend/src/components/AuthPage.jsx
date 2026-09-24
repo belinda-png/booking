@@ -715,5 +715,13 @@ function AuthPage({ mode, onNavigate }) {
     </div>
   )
 }
+<GoogleLogin
+  onSuccess={(credentialResponse) => {
+    // your Google login code
+  }}
+  onError={() => {
+    setError('Google login failed')
+  }}
+/>
 
 export default AuthPage
