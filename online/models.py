@@ -41,7 +41,7 @@ class User(AbstractUser):
         choices=ROLE_CHOICES,
         default="user"
     )
-
+    is_verified = models.BooleanField(default=False)
     phone_number = models.CharField(
         max_length=20,
         blank=True,
