@@ -5,13 +5,7 @@ import VendorDashboard from './vendor/VendorDashboard.jsx'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import AuthPage from './components/AuthPage.jsx'
 function App() {
-  return (
-    <GoogleOAuthProvider clientId="912421559864-5597jlerkouhup0en94tv487omc34j8o.apps.googleusercontent.com">
-      <App />
-    </GoogleOAuthProvider>
-  )
-}
-function App() {
+
   const [route, setRoute] = useState(() => {
     const hash = window.location.hash
     return ['#stays', '#register', '#signin', '#vendor-signin', '#vendor', '#admin', '#admin/vendors', '#admin/bookings'].includes(hash) ? hash : '#home'
