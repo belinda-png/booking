@@ -1,4 +1,7 @@
 import { GoogleLogin } from '@react-oauth/google'
+<GoogleOAuthProvider clientId={YOUR_GOOGLE_CLIENT_ID}>
+    <App />
+</GoogleOAuthProvider>
 import { useEffect, useState } from 'react'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
